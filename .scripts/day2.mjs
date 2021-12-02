@@ -1027,17 +1027,18 @@ var position = {
 var getPosition = (prop) => {
   prop.map((command) => {
     switch (command[0]) {
-      case "forward":
-        position.addHorizontal(parseInt(command[1]));
-        position.addDepth(parseInt(command[1]));
+      case Command.forward:
+        position.addHorizontal(command[1]);
+        position.addDepth(command[1]);
         break;
-      case "down":
-        return position.addAim(parseInt(command[1]));
-      case "up":
-        return position.subtractAim(parseInt(command[1]));
+      case Command.down:
+        return position.addAim(command[1]);
+      case Command.up:
+        return position.subtractAim(command[1]);
     }
   });
 };
 getPosition(commands);
 console.log(position);
 console.log(position.horizontal * position.depth);
+//! TODO: scrape input pages

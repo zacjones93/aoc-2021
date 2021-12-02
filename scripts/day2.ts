@@ -1034,13 +1034,13 @@ let position = {
 const getPosition = (prop) => {
   prop.map((command: Direction) => {
     switch (command[0]) {
-      case "forward":
+      case Command.forward:
         position.addHorizontal(command[1])
         position.addDepth(command[1])
       break;
-      case "down":
+      case Command.down:
         return position.addAim(command[1])
-      case "up":
+      case Command.up:
       return position.subtractAim(command[1])
     }
   })
