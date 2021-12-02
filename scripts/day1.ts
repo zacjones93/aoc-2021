@@ -69,6 +69,10 @@ each iteration
 push previous number into an array
 add current number to previous array
 combine numbers if any array is length === 3, remove array
+
+if((arr[i - 1] + arr[i] + arr[i + 1]) < (arr[i] + arr[i + 1] arr[i + 2])) count ++
+
+return i
 199  A
 200  A B
 208  A B C
