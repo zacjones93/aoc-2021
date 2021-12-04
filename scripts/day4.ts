@@ -741,7 +741,6 @@ function triggerInput(myInput) {
      }
   })
 
-  console.log({winningBoard})
    return {winningBoard, winningNum}
 }
 
@@ -757,10 +756,69 @@ function calculateScore({winningBoard, winningNum}) {
   return  unstarredSum * winningNum
 }
 
+function checkForBoardWinPart2(boards, numberDrawn) {
+  let winningGame = boards.playing.map((b, i) => {
+    let boardWin = checkForRowWin(b) || checkForColumnWin(b)
+    if(boardWin) {
+      boards.playing.splice(i, 1)
+      return {
+        winning: [...boards.winning, {number: numberDrawn, board: b
+          }],
+        playing: boards.playing
+      }
+    }
+    return false
+  })
+  return winningGame.filter(n => n)[0]
+}
+
+function triggerInputPart2(myInput) {
+  let transformInput = myInput.split(",")
+  let tmpInput = transformInput
+
+  let playingBoards = {
+    winning: [],
+    playing: boards
+  }
+  
+  let winningBoard = null
+  let winningNum
+  let win = tmpInput.some((numberDrawn: string) => {
+    let potentialWinningBoard
+     playingBoards.playing = markValuesFound(numberDrawn, playingBoards.playing)
+    
+     potentialWinningBoard = checkForBoardWinPart2(playingBoards, numberDrawn)
+     if(potentialWinningBoard?.winning && potentialWinningBoard?.winning > playingBoards?.winning) {
+
+      playingBoards = potentialWinningBoard
+     }
+
+     if(playingBoards.playing.length === 0) true
+  })
+   return playingBoards.winning
+}
+
+function calculateScorePart2(winningBoards) {
+  let lastWinningBoard = winningBoards.pop()
+  let unstarredSum = lastWinningBoard.board.map((row) => {
+    return row.reduce((prev, acc) => {
+      if(!acc.includes("*")) return prev += parseInt(acc)
+      return prev
+    }, 0)
+  }).reduce((prev, curr)=> {
+    return prev + curr
+  })
+  return  unstarredSum * lastWinningBoard.number
+}
+
 let colWinInput = `7,4,9,5,11,17,23,2,0,16,18,15,19,14,21,24,10,13,6,25,12,22,20,8,3,26,1`
+
 let win = triggerInput(input)
 
-console.log(calculateScore(win))
+console.log("--- Part One Score---\n", calculateScore(win))
+
+let winningBoards = triggerInputPart2(input)
+console.log("--- Part Two Score---\n", calculateScorePart2(winningBoards))
 
 // push boards out of playing board array and into winningBoards array
 // calculate score for last board

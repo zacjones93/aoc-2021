@@ -673,8 +673,8 @@ function checkForColumnWin(board) {
 }
 function checkForBoardWin(boards2) {
   let winningGame = boards2.map((b) => {
-    let rowWin = checkForRowWin(b) || checkForColumnWin(b);
-    return rowWin ? b : false;
+    let boardWin = checkForRowWin(b) || checkForColumnWin(b);
+    return boardWin ? b : false;
   });
   return winningGame.filter((n) => n)[0];
 }
@@ -694,7 +694,6 @@ function triggerInput(myInput) {
       return true;
     }
   });
-  console.log({ winningBoard });
   return { winningBoard, winningNum };
 }
 function calculateScore({ winningBoard, winningNum }) {
@@ -709,5 +708,58 @@ function calculateScore({ winningBoard, winningNum }) {
   });
   return unstarredSum * winningNum;
 }
+function checkForBoardWinPart2(boards2, numberDrawn) {
+  let winningGame = boards2.playing.map((b, i) => {
+    let boardWin = checkForRowWin(b) || checkForColumnWin(b);
+    if (boardWin) {
+      boards2.playing.splice(i, 1);
+      return {
+        winning: [...boards2.winning, {
+          number: numberDrawn,
+          board: b
+        }],
+        playing: boards2.playing
+      };
+    }
+    return false;
+  });
+  return winningGame.filter((n) => n)[0];
+}
+function triggerInputPart2(myInput) {
+  let transformInput = myInput.split(",");
+  let tmpInput = transformInput;
+  let playingBoards = {
+    winning: [],
+    playing: boards
+  };
+  let winningBoard = null;
+  let winningNum;
+  let win2 = tmpInput.some((numberDrawn) => {
+    let potentialWinningBoard;
+    playingBoards.playing = markValuesFound(numberDrawn, playingBoards.playing);
+    potentialWinningBoard = checkForBoardWinPart2(playingBoards, numberDrawn);
+    if (potentialWinningBoard?.winning && potentialWinningBoard?.winning > playingBoards?.winning) {
+      playingBoards = potentialWinningBoard;
+    }
+    if (playingBoards.playing.length === 0)
+      true;
+  });
+  return playingBoards.winning;
+}
+function calculateScorePart2(winningBoards2) {
+  let lastWinningBoard = winningBoards2.pop();
+  let unstarredSum = lastWinningBoard.board.map((row) => {
+    return row.reduce((prev, acc) => {
+      if (!acc.includes("*"))
+        return prev += parseInt(acc);
+      return prev;
+    }, 0);
+  }).reduce((prev, curr) => {
+    return prev + curr;
+  });
+  return unstarredSum * lastWinningBoard.number;
+}
 var win = triggerInput(input);
-console.log(calculateScore(win));
+console.log("--- Part One Score---\n", calculateScore(win));
+var winningBoards = triggerInputPart2(input);
+console.log("--- Part Two Score---\n", calculateScorePart2(winningBoards));
