@@ -747,6 +747,7 @@ function triggerInputPart2(myInput) {
   return playingBoards.winning;
 }
 function calculateScorePart2(winningBoards2) {
+  console.log(winningBoards2);
   let lastWinningBoard = winningBoards2.pop();
   let unstarredSum = lastWinningBoard.board.map((row) => {
     return row.reduce((prev, acc) => {
